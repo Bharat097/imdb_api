@@ -35,3 +35,19 @@
             "popularity": "{score (0-100)}",
             "rating": "{score (0-10)}"
         }
+
+### Update Movie Data
+* PUT
+* endpoint: /v1/movie/update
+* body: {
+            "name": "{name}",
+            "director": "{director}",
+            "popularity": "{score (0-100)}",
+            "rating": "{score (0-10)}"
+        }
+
+### Delete Movie Data
+* DELETE
+* endpoint: /v1/movie/delete
+* param: name
+ 

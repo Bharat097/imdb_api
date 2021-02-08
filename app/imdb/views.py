@@ -94,6 +94,48 @@ class Movie(MethodView):
             status_code=201
         )
 
+    def delete(self, current_user):
+        if not current_user.is_admin:
+            return response("Unauthorized", "Unauthorized", 401)
+        params = request.args
+        if not params or not params.get('name'):
+            return response("failed", "Missing Param", 400)
+        movie = MovieData.get_by_name(params.get('name'))
+        movie.remove()
+        return response(
+            status='success',
+            message='Successfully Deleted',
+            status_code=200
+        )
+
+    def put(self, current_user):
+        if not current_user.is_admin:
+            return response("Unauthorized", "Unauthorized", 401)
+        params = request.get_json()
+        if not params or not params.get('name'):
+            return response("failed", "Missing Param", 400)
+        movie = MovieData.get_by_name(params.get('name'))
+        if not movie:
+            return response(
+                status='failed',
+                message='Movie Not Found',
+                status_code=400
+            )
+        if params.get('director'):
+            movie.director = params.get('director')
+        if params.get('rating'):
+            movie.imdb_score = params.get('rating')
+        if params.get('popularity'):
+            movie.popularity = params.get('popularity')
+        movie.save()
+        return response(
+            status='success',
+            message='Successfully Updated',
+            status_code=200
+        )
+
 
 imdb.add_url_rule('/movies', view_func=GetMovies.as_view('get_movies'))
-imdb.add_url_rule('/movie/add', view_func=Movie.as_view('add_movie'))
+imdb.add_url_rule('/movie/add', view_func=Movie.as_view('add_movie'), methods=['POST', ])
+imdb.add_url_rule('/movie/update', view_func=Movie.as_view('update_movie'), methods=['PUT', ])
+imdb.add_url_rule('/movie/delete', view_func=Movie.as_view('delete_movie'), methods=['DELETE', ])

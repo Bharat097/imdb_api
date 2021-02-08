@@ -112,6 +112,14 @@ class MovieData(db.Model):
         db.session.commit()
         return "Successfully Added Movie to DB"
 
+    def remove(self):
+        """
+        Delete Movie from DB.
+        """
+        db.session.delete(self)
+        db.session.commit()
+        return "Successfully Deleted Movie from DB"
+
     def __str__(self):
         return "{} - {}".format(self.name, self.imdb_score)
 
